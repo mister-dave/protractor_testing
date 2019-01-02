@@ -69,6 +69,7 @@ describe('Protractor Demo App', function() {
   var firstNumber = element(by.model('first'));
   var secondNumber = element(by.model('second'));
   var goButton = element(by.id('gobutton'));
+  var operator = element(by.model('operator'));
   var latestResult = element(by.binding('latest'));
   var history = element.all(by.repeater('result in memory'));
 
@@ -82,6 +83,7 @@ describe('Protractor Demo App', function() {
     browser.get('http://juliemr.github.io/protractor-demo/');
   });
 
+  // = testcase
   it('should have a history', function() {
     add(1, 2);
     add(3, 4);
@@ -90,6 +92,22 @@ describe('Protractor Demo App', function() {
 
     add(5, 6);
 
-    expect(history.count()).toEqual(3); // initally set to '0', This is wrong! I changed to '3', now working
+    expect(history.count()).toEqual(3);
   });
+
+  it('should contain given first and last queries', function() {
+    add(1, 2);
+    add(3, 4);
+
+    expect(history.last().getText()).toContain('1 + 2');
+    expect(history.first().getText()).toContain('3 + 4');
+  });
+
+  it('should change between mathmatecal operators', function () {
+    firstNumber.sendKeys(10);
+    operator.$('[value="DIVISION"]').click();
+    secondNumber.sendKeys(2);
+    goButton.click();
+    expect(latestResult.getText()).toEqual('5');
+  })
 });
